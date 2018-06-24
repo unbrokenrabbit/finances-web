@@ -1,0 +1,10 @@
+{% extends "navigation.html" %}
+
+{% block content %}
+    <h1>Import Transactions</h1>
+    <form action = "http://localhost:5000/importTransactionsCsv" method = "POST" 
+        enctype = "multipart/form-data">
+        <input type = "file" name = "file" />
+        <input type = "submit"/>
+    </form>
+{% endblock %}

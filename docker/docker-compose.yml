@@ -1,0 +1,11 @@
+#version: '3'
+version: '2'
+services:
+  web:
+    build: ./web
+    ports:
+     - "5000:5000"
+    volumes:
+     - ./web:/code
+  redis:
+    image: "redis:alpine"
