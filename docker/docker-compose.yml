@@ -1,11 +1,26 @@
 #version: '3'
 version: '2'
 services:
-  web:
-    build: ./web
-    ports:
-     - "5000:5000"
-    volumes:
-     - ./web:/code
-  redis:
-    image: "redis:alpine"
+    web:
+        container_name: "finances-flask"
+        build: ./web
+        ports:
+            - "5000:5000"
+        volumes:
+            - ./web:/code
+        networks:
+            - finances
+    mongodb:
+        container_name: "finances-mongodb"
+        image: "mongo:3.6.0"
+        volumes:
+            - finances-mongodb-data:/data/db
+        networks:
+            - finances
+    #redis:
+    #  image: "redis:alpine"
+volumes:
+    finances-mongodb-data:
+networks:
+    finances:
+        driver: bridge

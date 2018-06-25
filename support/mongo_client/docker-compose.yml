@@ -1,0 +1,11 @@
+version: '2'
+services:
+    mongo-client:
+        container_name: "mongo-client"
+        build: .
+        #networks:
+        #    - finances
+networks:
+    default:
+        external:
+            name: docker_finances
