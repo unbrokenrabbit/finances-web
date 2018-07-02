@@ -1,0 +1,3 @@
+[submodule "docker/web/finances"]
+	path = docker/web/finances
+	url = git@github.com:unbrokenrabbit/finances.git

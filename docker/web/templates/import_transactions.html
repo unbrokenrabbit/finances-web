@@ -2,9 +2,15 @@
 
 {% block content %}
     <h1>Import Transactions</h1>
+
     <form action = "http://localhost:5000/import-transactions-csv" method = "POST" 
         enctype = "multipart/form-data">
-        <input type = "file" name = "file" />
-        <input type = "submit"/>
+        <input type="file" name="file" />
+        <select name="account" >
+        {% for account in accounts %}
+            <option value="{{ account }}">{{ account }}</option>
+        {% endfor %}
+        </select>
+        <input type="submit"/>
     </form>
 {% endblock %}

@@ -1,4 +1,3 @@
-#version: '3'
 version: '2'
 services:
     web:
@@ -10,6 +9,7 @@ services:
             - ./web:/code
         networks:
             - finances
+        command: sh /code/startup.sh
     mongodb:
         container_name: "finances-mongodb"
         image: "mongo:3.6.0"
