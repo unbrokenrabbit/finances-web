@@ -256,7 +256,7 @@ class CsvTransactionImporter( TransactionImporter ):
 #    def upsert_transactions( self, _transactions ):
 #        #mongo_client = MongoClient( 'finances-mongodb' )
 #        #db = mongo_client.finances_db
-#        #result = db.test_transactions.insert( { "name":"dave", "age":"34" } )
+#        #result = db.transactions.insert( { "name":"dave", "age":"34" } )
 #
 #        #temp = ""
 #        #for transaction in _transactions:

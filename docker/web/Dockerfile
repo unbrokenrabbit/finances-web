@@ -8,3 +8,5 @@ RUN apt install -y python3-minimal
 RUN apt install -y python3-pip
 RUN pip3 install flask
 RUN pip3 install pymongo
+RUN pip3 install plotly
+RUN pip3 install matplotlib

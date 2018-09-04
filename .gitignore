@@ -1,3 +1,6 @@
 *.sw*
 *.csv
 
+cscope.files
+cscope.out
+
