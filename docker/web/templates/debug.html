@@ -1,0 +1,23 @@
+{% extends "navigation.html" %}
+
+{% block content %}
+    {% if transactions %}
+        <table>
+            <tr>
+                <th>description</th>
+                <!--
+                <th>date</th>
+                <th>account</th>
+                <th>amount</th>
+                <th>tag</th>
+                -->
+            </tr>
+        {% for transaction in transactions %}
+            <tr>
+                <td>{{transaction.description}}</td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <p>No transactions</p>
+    {% endif %}
+{% endblock %}

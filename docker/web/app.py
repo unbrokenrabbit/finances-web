@@ -9,6 +9,7 @@ from werkzeug import secure_filename
 import finances.thing
 import finances.datamodel
 import finances.datastore
+import finances.graphs
 import finances.importer
 import finances.transactions
 
@@ -38,8 +39,8 @@ def home():
     monthly_income_vs_expenses_model_manager = finances.datamodel.MonthlyIncomeVsExpensesModelManager( data_manager )
     monthly_income_vs_expenses_model = monthly_income_vs_expenses_model_manager.build_monthly_income_vs_expenses_model( monthly_evaluation_criteria_list )
 
-    chart_builder = graphs.ChartBuilder()
-    path_to_monthly_income_vs_expenses_bar_chart = chart_builder.build_monthly_income_vs_expenses_bar_chart( monthly_income_vs_expenses_model )
+    #chart_builder = finances.graphs.ChartBuilder()
+    #path_to_monthly_income_vs_expenses_bar_chart = chart_builder.build_monthly_income_vs_expenses_bar_chart( monthly_income_vs_expenses_model )
 
     # DEBUG
     accounts_string = ''
@@ -53,12 +54,44 @@ def home():
         user=user,
         title=test,
         python_version=version,
-        debug=path_to_monthly_income_vs_expenses_bar_chart
+        #debug=path_to_monthly_income_vs_expenses_bar_chart
+        debug='TBD'
     )
 
 @app.route( '/import' )
 def import_things():
     return render_template( 'import.html' )
+
+@app.route( '/import-tags', methods=['GET', 'POST'] )
+def import_tags():
+    data_manager = finances.datastore.MongoDataManager()
+
+    debug = []
+    if request.method == 'POST':
+        tag = finances.datastore.Tag()
+        if request.form[ 'tag_name' ]:
+            tag.name = request.form[ 'tag_name' ]
+
+        if request.form[ 'tag_pattern' ]:
+            tag.pattern = request.form[ 'tag_pattern' ]
+
+        if request.form[ 'tag_income_vs_expense' ]:
+            tag.income_vs_expense = request.form[ 'tag_income_vs_expense' ]
+
+        if request.form[ 'tag_account' ]:
+            tag.account = request.form[ 'tag_account' ]
+
+        if tag.account and tag.name and tag.pattern and tag.income_vs_expense and tag.account:
+            debug.append( 'all fields accounted for' )
+            data_manager.upsert_tag( tag )
+        else:
+            debug.append( 'missing field(s)' )
+
+    accounts = data_manager.get_accounts()
+    tags = data_manager.get_tags()
+    untagged_transactions = data_manager.get_untagged_transactions()
+
+    return render_template( 'import_tags.html', accounts=accounts, untagged_transactions=untagged_transactions, tags=tags, debug=debug )
 
 @app.route( '/import-transactions' )
 def import_transactions():
@@ -95,6 +128,10 @@ def import_transactions_csv():
 @app.route( '/report' )
 def report():
     return render_template( 'report.html' )
+
+@app.route( '/debug' )
+def debug():
+    return render_template( 'debug.html' )
 
 if __name__ == "__main__":
     app.run( host="0.0.0.0", debug=True )
