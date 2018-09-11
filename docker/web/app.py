@@ -3,7 +3,9 @@ import sys
 import time
 from flask import Flask
 from flask import render_template
+from flask import redirect
 from flask import request
+from flask import url_for
 from werkzeug import secure_filename
 
 import finances.thing
@@ -84,6 +86,7 @@ def import_tags():
         if tag.account and tag.name and tag.pattern and tag.income_vs_expense and tag.account:
             debug.append( 'all fields accounted for' )
             data_manager.upsert_tag( tag )
+            data_manager.apply_tags()
         else:
             debug.append( 'missing field(s)' )
 
@@ -92,6 +95,17 @@ def import_tags():
     untagged_transactions = data_manager.get_untagged_transactions()
 
     return render_template( 'import_tags.html', accounts=accounts, untagged_transactions=untagged_transactions, tags=tags, debug=debug )
+
+@app.route( '/delete-tags', methods=['POST'] )
+def delete_tags():
+    data_manager = finances.datastore.MongoDataManager()
+    tags_to_delete = request.form.getlist( 'tag_to_delete' )
+    for tag_to_delete in tags_to_delete:
+        data_manager.delete_tag( tag_to_delete )
+
+    data_manager.apply_tags()
+
+    return redirect( url_for( 'import_tags' ) )
 
 @app.route( '/import-transactions' )
 def import_transactions():

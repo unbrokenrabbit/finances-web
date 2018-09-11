@@ -31,22 +31,28 @@
     <br />
 {% endfor %}
 <h2>Tags</h2>
-<table>
-    <tr>
-        <th>name</th>
-        <th>pattern</th>
-        <th>income vs expense</th>
-        <th>account</th>
-    </tr>
-{% for tag in tags %}
-    <tr>
-        <td>{{tag.name}}</td>
-        <td>{{tag.pattern}}</td>
-        <td>{{tag.income_vs_expense}}</td>
-        <td>{{tag.account}}</td>
-    </tr>
-{% endfor %}
-</table>
+<button onclick="hideShowTags()">Show/Hide</button>
+<form action={{url_for('delete_tags')}} method="post">
+    <input type="submit" value="Delete Selected Tags"/>
+    <table id="tags_table" style="display: block;">
+        <tr>
+            <th><input type="checkbox" /></th>
+            <th>name</th>
+            <th>pattern</th>
+            <th>income vs expense</th>
+            <th>account</th>
+        </tr>
+    {% for tag in tags %}
+        <tr>
+            <td><input type="checkbox" name="tag_to_delete" value="{{tag.id}}" /></td>
+            <td>{{tag.name}}</td>
+            <td>{{tag.pattern}}</td>
+            <td>{{tag.income_vs_expense}}</td>
+            <td>{{tag.account}}</td>
+        </tr>
+    {% endfor %}
+    </table>
+</form>
 <h2>Untagged Transactions</h2>
 <table>
     <tr>
@@ -59,8 +65,22 @@
     <tr>
         <td>{{untagged_transaction.account}}</td>
         <th>{{untagged_transaction.amount}}</th>
-        <th>{{untagged_transaction.description}}</th>
+        <th>[{{untagged_transaction.description}}]</th>
         <th>{{untagged_transaction.date}}</th>
     </tr>
     {% endfor %}
+<script>
+function hideShowTags() {
+    tags_table = document.getElementById( 'tags_table' )
+    if( tags_table.style.display == 'none' ) {
+        tags_table.style.display = 'block'
+    }
+    else if( tags_table.style.display == 'block' ) {
+        tags_table.style.display = 'none'
+    }
+    else {
+        alert( 'table display value should not be [' + tags_table.style.display + ']' )
+    }
+}
+</script>
 {% endblock %}
